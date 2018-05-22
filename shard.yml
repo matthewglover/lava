@@ -1,0 +1,9 @@
+name: lava
+version: 0.1.0
+
+authors:
+  - Matt Glover <matt.glover@ladbrokescoral.com>
+
+crystal: 0.24.2
+
+license: MIT
