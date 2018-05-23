@@ -2,7 +2,10 @@ name: lava
 version: 0.1.0
 
 authors:
-  - Matt Glover <matt.glover@ladbrokescoral.com>
+  - Matt Glover <mglover@8thlight.com>
+
+description: |
+  Functional programming library for the Crystal Language
 
 crystal: 0.24.2
 
