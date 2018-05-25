@@ -46,17 +46,30 @@ describe Lava::Result do
   end
 
   describe "#flat_map" do
-    it "Ok(E, A) #flat_map Proc(A, Result(E, B) = Result(E, B)" do
-      int_to_either_str = ->(a : Int32){ Lava::Result.ok(a.to_s, Exception) }
+    it "Ok(E, A) #flat_map Proc(A, Ok(E, B)) = Ok(E, B)" do
+      int_to_ok_str = ->(a : Int32){ Lava::Result.ok(a.to_s, Exception) }
       ok = Lava::Result.ok(10, Exception)
-      actual = ok.flat_map(int_to_either_str)
+      actual = ok.flat_map(int_to_ok_str)
       actual.peek.should eq "10"
     end
 
-    it "Error(E, A) #flat_map Proc(A, Result(E, B) = Error(E, B)" do
-      int_to_either_str = ->(a : Int32){ Lava::Result.ok(a.to_s, Exception) }
+    it "Error(E, A) #flat_map Proc(A, Ok(E, B)) = Error(E, B)" do
+      int_to_ok_str = ->(a : Int32){ Lava::Result.ok(a.to_s, Exception) }
       error = Lava::Result.error(ex, Int32)
-      actual = error.flat_map(int_to_either_str)
+
+      actual = error.flat_map(int_to_ok_str)
+
+      actual.should be_a Lava::Result(Exception, String)
+      actual.peek.should eq ex
+    end
+
+    it "Ok(E, A) #flat_map Proc(A, Error(E, B)) = Error(E, B)" do
+      int_to_error_str = ->(a : Int32){ Lava::Result.error(ex, String) }
+      ok = Lava::Result.ok(10, Exception)
+
+      actual = ok.flat_map(int_to_error_str)
+
+      actual.should be_a Lava::Result(Exception, String)
       actual.peek.should eq ex
     end
   end
